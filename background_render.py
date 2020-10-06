@@ -6,8 +6,6 @@ sys.path.append(".")
 from range import Range
 
 def render(args):
-    # Clear existing objects.
-    
     render = bpy.context.scene.render
     rpr = bpy.context.scene.rpr
 
@@ -40,10 +38,8 @@ def render(args):
 
 
 def main():
-    
-
     # get the args passed to blender after "--", all of which are ignored by
-    # blender so script may receive their own arguments
+    # blender so script may receive its own arguments
     argv = sys.argv
 
     if "--" not in argv:
@@ -59,31 +55,35 @@ def main():
 
     parser = argparse.ArgumentParser(description=usage_text)
 
+    # Available arguments for the script
     parser.add_argument(
-        "--out-path", dest="out_path",
+        "--out-path", dest="out_path", help="Path to put results to"
     )
     parser.add_argument(
-        "--width", dest="render_width", type=int,
+        "--width", dest="render_width", type=int, help="Width of the resulting file"
     )
     parser.add_argument(
-        "--height", dest="render_height", type=int,
+        "--height", dest="render_height", type=int, help="Height of the resulting file"
     )
     parser.add_argument(
-        "--file-format", dest="file_format",
+        "--file-format", dest="file_format", help="Result file format",
         choices=['TGA', 'RAWTGA', 'JPEG', 'IRIS', 'IRIZ', 'AVIRAW', 'AVIJPEG', 'PNG', 'BMP',
          'HDR', 'TIFF', 'OPEN_EXR', 'OPEN_EXR_MULTILAYER', 'MPEG', 'CINEON', 'DPX', 'DDS', 'JP2']
     )
     parser.add_argument(
-        "--min-samples", dest="min_samples", type=int
+        "--min-samples", dest="min_samples", type=int,
+        help="Minimum number of samples to render for each pixel. After this, adaptive sampling will stop sampling pixels where noise is less than threshold"
     )
     parser.add_argument(
-        "--max-samples", dest="max_samples", type=int
+        "--max-samples", dest="max_samples", type=int, help="Number of iterations to render for each pixel"
     )
     parser.add_argument(
-        "--noise-threshold", dest="noise_threshold", type=float, choices=Range(0.0, 1.0)
+        "--noise-threshold", dest="noise_threshold", type=float, choices=Range(0.0, 1.0),
+        help="Cutoff for adaptive sampling. Once pixels are below this amount of noise, no more samples are added"
     )
     parser.add_argument(
-        "--time-limit", dest="time_limit", type=int
+        "--time-limit", dest="time_limit", type=int,
+        help="Time limit in seconds for rendering a single scene"
     )
 
     args = parser.parse_args(argv)
